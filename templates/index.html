@@ -1,0 +1,187 @@
+{% extends 'layout.html' %} {% block style %}
+<style>
+#plot11 {
+    width: 100%;
+    height: 487px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+
+#plot12 {
+    width: 100%;
+    height: 215px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+
+#plot13 {
+    width: 100%;
+    height: 215px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+
+#plot21 {
+    width: 100%;
+    height: 215px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+
+#plot22 {
+    width: 100%;
+    height: 215px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+
+#plot23 {
+    width: 100%;
+    height: 487px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+
+#plot31 {
+    width: 100%;
+    height: 487px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+
+#plot32 {
+    width: 100%;
+    height: 215px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+
+#plot33 {
+    width: 100%;
+    height: 215px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+
+#plot41 {
+    width: 100%;
+    height: 215px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+
+#plot42 {
+    width: 100%;
+    height: 215px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+
+#plot43 {
+    width: 100%;
+    height: 487px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+</style>
+{% endblock %} {% block body %}
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <div class="plot-title">实时公交</div>
+        <div id="plot11">
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="plot-title">这里是标题</div>
+        <div id="plot12"></div>
+        <div class="plot-title">这里是标题</div>
+        <div id="plot13"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="plot-title">这里是标题</div>
+        <div id="plot21"></div>
+        <div class="plot-title">这里是标题</div>
+        <div id="plot22"></div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <div class="plot-title">实时出租车</div>
+        <div id="plot23">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <div class="plot-title">实时地铁</div>
+        <div id="plot31">
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="plot-title">这里是标题</div>
+        <div id="plot32"></div>
+        <div class="plot-title">这里是标题</div>
+        <div id="plot33"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="plot-title">这里是标题</div>
+        <div id="plot41"></div>
+        <div class="plot-title">这里是标题</div>
+        <div id="plot42"></div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <div class="plot-title">实时商圈和停车场</div>
+        <div id="plot43">
+        </div>
+    </div>
+</div>
+<script>
+$(document).ready(function() {
+    $('#nav1').addClass('active');
+
+    var plot11 = echarts.init(document.getElementById('plot11'), 'dark');
+    var heatmapOption = {
+        animation: false,
+        bmap: {
+            center: [123.43, 41.81],
+            zoom: 11,
+            roam: false,
+            mapStyle: mapstyle
+        },
+        visualMap: {
+            show: true,
+            left: 15,
+            bottom: 5,
+            min: 0,
+            max: 5,
+            seriesIndex: 0,
+            calculable: true,
+            inRange: {
+                color: ['#50a3ba', '#eac736', '#d94e5d']
+            }
+        },
+        series: [{
+            type: 'heatmap',
+            coordinateSystem: 'bmap',
+            data: [
+                [123.43, 41.81, 5],
+            ],
+            pointSize: 5,
+            blurSize: 6
+        }]
+    };
+    plot11.setOption(heatmapOption);
+
+    var plot23 = echarts.init(document.getElementById('plot23'), 'dark');
+    plot23.setOption(heatmapOption);
+
+    var plot31 = echarts.init(document.getElementById('plot31'), 'dark');
+    plot31.setOption(heatmapOption);
+
+    var plot43 = echarts.init(document.getElementById('plot43'), 'dark');
+    plot43.setOption(heatmapOption);
+});
+</script>
+{% endblock %}

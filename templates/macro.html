@@ -1,0 +1,141 @@
+{% extends 'layout.html' %} {% block style %}
+<style>
+#plot1 {
+    width: 100%;
+    height: 500px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+</style>
+{% endblock %} {% block body %}
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="plot-title">城市各类设施分布</div>
+        <div id="plot1"></div>
+    </div>
+</div>
+<script>
+$(document).ready(function() {
+    $('#nav2').addClass('active');
+
+    var dataset = eval({{dataset | safe}});
+    console.log(dataset);
+
+    var plot1 = echarts.init(document.getElementById('plot1'), 'dark');
+
+    var tmp = dataset['json']['metro_station'];
+    var metro_line_1 = [];
+    var metro_line_2 = [];
+    for (var i = 0; i < tmp['一号线'].length; i++) {
+        metro_line_1.push({
+            name: tmp['一号线'][i][0],
+            value: [tmp['一号线'][i][1], tmp['一号线'][i][2], 100]
+        });
+    }
+    for (var i = 0; i < tmp['二号线'].length; i++) {
+        metro_line_2.push({
+            name: tmp['二号线'][i][0],
+            value: [tmp['二号线'][i][1], tmp['二号线'][i][2], 100]
+        });
+    }
+
+    var seriesDict = {
+        'metro_station': [{
+            name: '地铁一号线',
+            type: 'scatter',
+            coordinateSystem: 'bmap',
+            data: metro_line_1,
+            symbolSize: function(val) {
+                return val[2] / 10;
+            },
+            itemStyle: {
+                normal: {
+                    color: '#d94e5d',
+                    shadowBlur: 5,
+                    shadowColor: '#333'
+                }
+            }
+        }, {
+            name: '地铁二号线',
+            type: 'scatter',
+            coordinateSystem: 'bmap',
+            data: metro_line_2,
+            symbolSize: function(val) {
+                return val[2] / 10;
+            },
+            itemStyle: {
+                normal: {
+                    color: '#eac736',
+                    shadowBlur: 5,
+                    shadowColor: '#333'
+                }
+            }
+        }],
+        'shooter': {
+            name: '道路摄像头',
+            type: 'scatter',
+            coordinateSystem: 'bmap',
+            data: dataset.json.shooter,
+            symbolSize: 5,
+            itemStyle: {
+                normal: {
+                    color: '#50a3ba',
+                }
+            }
+        },
+        'bus_lines': [{
+            name: '公交线路',
+            type: 'lines',
+            coordinateSystem: 'bmap',
+            polyline: true,
+            data: dataset.json.bus_lines,
+            silent: true,
+            lineStyle: {
+                normal: {
+                    color: '#c23531',
+                    color: 'rgb(200, 35, 45)',
+                    opacity: 0.3,
+                    width: 1.5
+                }
+            },
+            progressiveThreshold: 500,
+            progressive: 200
+        }, {
+            type: 'lines',
+            coordinateSystem: 'bmap',
+            polyline: true,
+            data: dataset.json.bus_lines,
+            lineStyle: {
+                normal: {
+                    width: 0
+                }
+            },
+            effect: {
+                constantSpeed: 60,
+                show: true,
+                trailLength: 0.1,
+                symbolSize: 1.5
+            },
+            zlevel: 1
+        }]
+    }
+
+    var option1 = {
+        tooltip: {
+            trigger: 'item',
+            formatter: function(params) {
+                return params.seriesName + ' ' + params.name;
+            }
+        },
+        bmap: {
+            center: [123.43, 41.81],
+            zoom: 12,
+            roam: 'move',
+            mapStyle: mapstyle
+        },
+        series: [seriesDict['bus_lines'][0], seriesDict['shooter'], seriesDict['metro_station'][0], seriesDict['metro_station'][1]]
+    }
+    plot1.setOption(option1);
+});
+</script>
+{% endblock %}
