@@ -6,12 +6,169 @@
     background-color: #30323c !important;
     margin-bottom: 30px;
 }
+
+#control1 {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    border-top-right-radius: 5px;
+    background-color: rgba(200, 200, 200, 0.3);
+    padding: 12px 16px;
+}
+
+#control1 div {
+    color: #666;
+    font-size: 12px;
+    padding: 8px 16px;
+    border-radius: 3px;
+    -webkit-transition: color .4s;
+    -moz-transition: color .4s;
+    -ms-transition: color .4s;
+    -o-transition: color .4s;
+    transition: color .4s;
+    text-align: center;
+}
+
+#control1 div:hover {
+    cursor: default;
+}
+
+#control1 #btn1.active {
+    color: rgb(221, 107, 102);
+}
+
+#control1 #btn2.active {
+    color: rgb(243, 230, 162);
+}
+
+#control1 #btn3.active {
+    color: #5dbdd7;
+}
+
+#control1 #btn4.active {
+    color: #b6e2bb;
+}
+#plot2 {
+    width: 100%;
+    height: 400px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+}
+#plot2 rect:hover {
+    stroke-width: 1.5px;
+    stroke: #fff;
+    cursor: pointer;
+}
+#plot3 {
+    width: 100%;
+    height: 400px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+}
+#plot3 rect:hover {
+    stroke-width: 1.5px;
+    stroke: #fff;
+    cursor: pointer;
+}
+.info {
+    display: none;
+    padding: 12px 15px;
+    background-color: rgba(40, 40, 40, 0.9);
+    border-radius: 5px;
+    position: absolute;
+    text-align: left;
+    font-size: 12px;
+    color: #999;
+}
+.info span {
+    color: #fff;
+    display: block;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+#plot4 {
+    width: 100%;
+    height: 300px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+
+#plot5 {
+    width: 100%;
+    height: 300px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+#plot6 {
+    width: 100%;
+    height: 400px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
 </style>
 {% endblock %} {% block body %}
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="plot-title">城市各类设施分布</div>
-        <div id="plot1"></div>
+        <div style="position:relative;">
+            <div id="plot1"></div>
+            <div id="control1">
+                <div id="btn1" class="active">地铁一号线</div>
+                <div id="btn2" class="active">地铁二号线</div>
+                <div id="btn3" class="active">道路摄像头</div>
+                <div id="btn4" class="active">公交线路</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="plot-title">公交卡数据公交客流时序分布</div>
+        <div id="plot2">
+            <div class="info">
+            </div>
+            <svg width="1000px" height="400px">
+                <g></g>
+            </svg>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="plot-title">公交卡数据地铁客流时序分布</div>
+        <div id="plot3">
+            <div class="info">
+            </div>
+            <svg width="1000px" height="400px">
+                <g></g>
+            </svg>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="plot-title">活跃和载客出租车数量时序分布</div>
+        <div id="plot4">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="plot-title">各班次公交车数量时序分布</div>
+        <div id="plot5">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="plot-title">商圈人流时序分布</div>
+        <div id="plot6">
+        </div>
     </div>
 </div>
 <script>
@@ -50,7 +207,7 @@ $(document).ready(function() {
             },
             itemStyle: {
                 normal: {
-                    color: '#d94e5d',
+                    color: 'rgb(221, 107, 102)',
                     shadowBlur: 5,
                     shadowColor: '#333'
                 }
@@ -65,7 +222,7 @@ $(document).ready(function() {
             },
             itemStyle: {
                 normal: {
-                    color: '#eac736',
+                    color: 'rgb(243, 230, 162)',
                     shadowBlur: 5,
                     shadowColor: '#333'
                 }
@@ -79,7 +236,9 @@ $(document).ready(function() {
             symbolSize: 5,
             itemStyle: {
                 normal: {
-                    color: '#50a3ba',
+                    color: '#5dbdd7',
+                    shadowBlur: 2,
+                    shadowColor: '#333'
                 }
             }
         },
@@ -92,9 +251,9 @@ $(document).ready(function() {
             silent: true,
             lineStyle: {
                 normal: {
-                    color: '#bebebe',
-                    opacity: 0.3,
-                    width: 1.5
+                    color: '#b6e2bb',
+                    opacity: 0.2,
+                    width: 1
                 }
             },
             progressiveThreshold: 500,
@@ -127,7 +286,7 @@ $(document).ready(function() {
             }
         },
         bmap: {
-            center: [123.43, 41.81],
+            center: [123.41, 41.82],
             zoom: 12,
             roam: 'move',
             mapStyle: mapstyle
@@ -135,6 +294,505 @@ $(document).ready(function() {
         series: [seriesDict['bus_lines'][0], seriesDict['shooter'], seriesDict['metro_station'][0], seriesDict['metro_station'][1]]
     }
     plot1.setOption(option1);
+
+    // $('#control1 div').click(function(event) {
+    //     $(this).toggleClass('active');
+    //     option1.series = [];
+    //     if ($('#control1 #btn4').hasClass('active')) {
+    //         option1.series.push(seriesDict['bus_lines'][0]);
+    //     }
+    //     if ($('#control1 #btn3').hasClass('active')) {
+    //         option1.series.push(seriesDict['shooter']);
+    //     }
+    //     if ($('#control1 #btn1').hasClass('active')) {
+    //         option1.series.push(seriesDict['metro_station'][0]);
+    //     }
+    //     if ($('#control1 #btn2').hasClass('active')) {
+    //         option1.series.push(seriesDict['metro_station'][1]);
+    //     }
+    //     plot1 = echarts.init(document.getElementById('plot1'), 'dark');
+    //     plot1.setOption(option1);
+    // });
+
+    var colors1 = d3.interpolate(d3.rgb(84, 164, 182), d3.rgb(231, 198, 57));
+    var colors2 = d3.interpolate(d3.rgb(231, 198, 57), d3.rgb(207, 91, 100));
+    var plot2_width = 1000;
+    var plot2_height = 400;
+    var plot2_margins = [30, 20, 60, 50];
+    d3.select('#plot2 svg g').selectAll('rect').data(dataset.json.bus_flow).enter().append('rect').attr({
+        width: 13,
+        height: 14,
+        fill: function(d) {
+            if (d[3] < 0.5) {
+                return colors1(2 *  d[3]);
+            }
+            else {
+                return colors2(2 * (d[3] - 0.5));
+            }
+        },
+        x: function(d, i) {
+            return parseInt(i / 20) * (plot2_width - plot2_margins[1] - plot2_margins[3]) / 61 + plot2_margins[3];
+        },
+        y: function(d, i) {
+            return i % 20 * (plot2_height - plot2_margins[0] - plot2_margins[2]) / 20 + plot2_margins[0];
+        },
+        name: function(d) {
+            return d[0] + ' ' + d[1] + '<br/><span>' + d[2] + '</span>';
+        }
+    });
+    var plot2_x = ['2016-08-01', '2016-08-06', '2016-08-11', '2016-08-16', '2016-08-21', '2016-08-26', '2016-08-31', '2016-09-05', '2016-09-10', '2016-09-15', '2016-09-20', '2016-09-25', '2016-09-30'];
+    d3.select('#plot2 svg g').selectAll('text.x').data(plot2_x).enter().append('text').attr({
+        class: 'x',
+        fill: '#fff',
+        'font-size': 12,
+        x: function(d, i) {
+            return i * (plot2_width - plot2_margins[1] - plot2_margins[3]) / 61 * 5 + 30;
+        },
+        y: plot2_height - 25
+    }).text(function(d){
+        return d.substr(2, 10);
+    });
+    var plot2_y = ['04', '07', '10', '13', '16', '19', '22'];
+    d3.select('#plot2 svg g').selectAll('text.y').data(plot2_y).enter().append('text').attr({
+        class: 'y',
+        fill: '#fff',
+        'font-size': 12,
+        y: function(d, i) {
+            return i * (plot2_height - plot2_margins[0] - plot2_margins[2]) / 20 * 3 + 42;
+        },
+        x: plot2_margins[3] - 40
+    }).text(function(d){
+        return d;
+    });
+
+    var plot2_axis = [];
+    plot2_axis.push([plot2_margins[3] - 15, plot2_height - plot2_margins[2] + 15, plot2_width, plot2_height - plot2_margins[2] + 15]);
+    plot2_axis.push([plot2_margins[3] - 15, plot2_margins[0], plot2_margins[3] - 15, plot2_height - plot2_margins[2] + 15]);
+    for (var i = 0; i < plot2_x.length; i++) {
+        var x = plot2_margins[3] + 7 + i * (plot2_width - plot2_margins[1] - plot2_margins[3]) / 61 * 5;
+        plot2_axis.push([x, plot2_height - plot2_margins[2] + 15, x, plot2_height - plot2_margins[2] + 10]);
+    }
+    for (var i = 0; i < plot2_y.length; i++) {
+        var y = plot2_margins[0] + 7 + i * (plot2_height - plot2_margins[0] - plot2_margins[2]) / 20 * 3;
+        plot2_axis.push([plot2_margins[3] - 15, y, plot2_margins[3] - 10, y]);
+    }
+    d3.select('#plot2 svg g').selectAll('line').data(plot2_axis).enter().append('line').attr({
+        x1: function(d) {
+            return d[0];
+        },
+        y1: function(d) {
+            return d[1];
+        },
+        x2: function(d) {
+            return d[2];
+        },
+        y2: function(d) {
+            return d[3];
+        },
+        'shape-rendering': 'crispEdges',
+        'stroke': 'rgba(250,250,250,0.5)',
+        'stroke-width': 1,  
+    });
+
+    $('#plot2 svg g').on('mouseover', 'rect', function(event) {
+        $obj = $(this);
+        var x = parseInt($obj.attr('x'));
+        var y = parseInt($obj.attr('y'));
+
+        $('#plot2 .info').html($(this).attr('name')).css({
+            left: x + 120,
+            top: y - 20
+        }).show();
+    });
+    $('#plot2 svg g').on('mouseout', 'rect', function(event) {
+        $('#plot2 .info').hide();
+    });
+
+    var plot3_width = 1000;
+    var plot3_height = 400;
+    var plot3_margins = [30, 20, 60, 50];
+    d3.select('#plot3 svg g').selectAll('rect').data(dataset.json.metro_flow).enter().append('rect').attr({
+        width: 13,
+        height: 14,
+        fill: function(d) {
+            if (d[3] < 0.5) {
+                return colors1(2 *  d[3]);
+            }
+            else {
+                return colors2(2 * (d[3] - 0.5));
+            }
+        },
+        x: function(d, i) {
+            return parseInt(i / 19) * (plot3_width - plot3_margins[1] - plot3_margins[3]) / 61 + plot3_margins[3];
+        },
+        y: function(d, i) {
+            return i % 19 * (plot3_height - plot3_margins[0] - plot3_margins[2]) / 19 + plot3_margins[0];
+        },
+        name: function(d) {
+            return d[0] + ' ' + d[1] + '<br/><span>' + d[2] + '</span>';
+        }
+    });
+    var plot3_x = ['2016-08-01', '2016-08-06', '2016-08-11', '2016-08-16', '2016-08-21', '2016-08-26', '2016-08-31', '2016-09-05', '2016-09-10', '2016-09-15', '2016-09-20', '2016-09-25', '2016-09-30'];
+    d3.select('#plot3 svg g').selectAll('text.x').data(plot3_x).enter().append('text').attr({
+        class: 'x',
+        fill: '#fff',
+        'font-size': 12,
+        x: function(d, i) {
+            return i * (plot3_width - plot3_margins[1] - plot3_margins[3]) / 61 * 5 + 30;
+        },
+        y: plot3_height - 25
+    }).text(function(d){
+        return d.substr(2, 10);
+    });
+    var plot3_y = ['05', '08', '11', '14', '17', '20', '23'];
+    d3.select('#plot3 svg g').selectAll('text.y').data(plot3_y).enter().append('text').attr({
+        class: 'y',
+        fill: '#fff',
+        'font-size': 12,
+        y: function(d, i) {
+            return i * (plot3_height - plot3_margins[0] - plot3_margins[2]) / 19 * 3 + 42;
+        },
+        x: plot3_margins[3] - 40
+    }).text(function(d){
+        return d;
+    });
+
+    var plot3_axis = [];
+    plot3_axis.push([plot3_margins[3] - 15, plot3_height - plot3_margins[2] + 15, plot3_width, plot3_height - plot3_margins[2] + 15]);
+    plot3_axis.push([plot3_margins[3] - 15, plot3_margins[0], plot3_margins[3] - 15, plot3_height - plot3_margins[2] + 15]);
+    for (var i = 0; i < plot3_x.length; i++) {
+        var x = plot3_margins[3] + 7 + i * (plot3_width - plot3_margins[1] - plot3_margins[3]) / 61 * 5;
+        plot3_axis.push([x, plot3_height - plot3_margins[2] + 15, x, plot3_height - plot3_margins[2] + 10]);
+    }
+    for (var i = 0; i < plot3_y.length; i++) {
+        var y = plot3_margins[0] + 7 + i * (plot3_height - plot3_margins[0] - plot3_margins[2]) / 19 * 3;
+        plot3_axis.push([plot3_margins[3] - 15, y, plot3_margins[3] - 10, y]);
+    }
+    d3.select('#plot3 svg g').selectAll('line').data(plot3_axis).enter().append('line').attr({
+        x1: function(d) {
+            return d[0];
+        },
+        y1: function(d) {
+            return d[1];
+        },
+        x2: function(d) {
+            return d[2];
+        },
+        y2: function(d) {
+            return d[3];
+        },
+        'shape-rendering': 'crispEdges',
+        'stroke': 'rgba(250,250,250,0.5)',
+        'stroke-width': 1,  
+    });
+
+    $('#plot3 svg g').on('mouseover', 'rect', function(event) {
+        $obj = $(this);
+        var x = parseInt($obj.attr('x'));
+        var y = parseInt($obj.attr('y'));
+
+        $('#plot3 .info').html($(this).attr('name')).css({
+            left: x + 120,
+            top: y - 20
+        }).show();
+    });
+    $('#plot3 svg g').on('mouseout', 'rect', function(event) {
+        $('#plot3 .info').hide();
+    });
+
+    var plot4 = echarts.init(document.getElementById('plot4'), 'dark');
+    var option = {
+        color: ['#eac736', '#50a3ba'],
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['活跃出租车', '载客出租车'],
+            padding: [0, 0, 0, 0],
+            top: 25
+        },
+        grid: {
+            left: 80,
+            right: 35,
+            top: 60,
+            bottom: 35
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            axisLine: {
+                show: false
+            },
+            axisTick: {
+                show: false
+            },
+            axisLabel: {
+                show: false
+            },
+            data: dataset.json.taxi.timestamp
+        },
+        yAxis: {
+            type: 'value',
+            splitNumber: 4,
+            splitLine: {
+                show: true,
+            },
+            axisLine: {
+                show: false,
+            },
+            axisTick: {
+                show: false
+            },
+            axisLabel: {
+                margin: 16
+            }
+        },
+        series: [{
+            name: '活跃出租车',
+            type: 'line',
+            symbol: 'none',
+            showSymbol: false,
+            smooth: true,
+            data: dataset.json.taxi.active,
+        }, {
+            name: '载客出租车',
+            type: 'line',
+            symbol: 'none',
+            showSymbol: false,
+            smooth: true,
+            data: dataset.json.taxi.loaded,
+        }]
+    };
+    plot4.setOption(option);
+
+    var plot5 = echarts.init(document.getElementById('plot5'), 'dark');
+    var tmp = [];
+    var tmpc = [];
+    for (var key in dataset.json.busline_active.data) {
+        tmp.push({
+            name: key,
+            type: 'line',
+            symbol: 'none',
+            showSymbol: false,
+            smooth: true,
+            data: dataset.json.busline_active.data[key],
+            lineStyle: {
+                normal: {
+                    opacity: dataset.json.busline_active.colors[key]
+                }
+            }
+        });
+        tmpc.push(colors2(dataset.json.busline_active.colors[key]));
+    }
+    var option = {
+        color: tmpc,
+        tooltip: {
+            trigger: 'item'
+        },
+        grid: {
+            left: 80,
+            right: 35,
+            top: 60,
+            bottom: 35
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            axisLine: {
+                show: false
+            },
+            axisTick: {
+                show: false
+            },
+            axisLabel: {
+                show: true
+            },
+            data: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']
+        },
+        yAxis: {
+            type: 'value',
+            splitNumber: 4,
+            splitLine: {
+                show: true,
+            },
+            axisLine: {
+                show: false,
+            },
+            axisTick: {
+                show: false
+            },
+            axisLabel: {
+                margin: 16
+            }
+        },
+        series: tmp
+    };
+    plot5.setOption(option);
+
+    var indices = {
+        name: 0,
+        group: 1,
+    };
+    var schema = [
+        {name: 'name', index: 0},
+        {name: 'group', index: 1},
+        {name: '00', index: 2},
+        {name: '01', index: 3},
+        {name: '02', index: 4},
+        {name: '03', index: 5},
+        {name: '04', index: 6},
+        {name: '05', index: 7},
+        {name: '06', index: 8},
+        {name: '07', index: 9},
+        {name: '08', index: 10},
+        {name: '09', index: 11},
+        {name: '10', index: 12},
+        {name: '11', index: 13},
+        {name: '12', index: 14},
+        {name: '13', index: 15},
+        {name: '14', index: 16},
+        {name: '15', index: 17},
+        {name: '16', index: 18},
+        {name: '17', index: 19},
+        {name: '18', index: 20},
+        {name: '19', index: 21},
+        {name: '20', index: 22},
+        {name: '21', index: 23},
+        {name: '22', index: 24},
+        {name: '23', index: 25},
+    ];
+
+    var groupCategories = [];
+    var groupColors = [];
+    var tmp = {};
+    for (var i = 0; i < dataset.json.human.length; i++) {
+        if (!tmp.hasOwnProperty(dataset.json.human[i][1])) {
+            tmp[dataset.json.human[i][1]] = 1;
+        }
+    }
+    for (var key in tmp) {
+        groupCategories.push(key);
+    }
+    var hStep = Math.round(300 / (groupCategories.length - 1));
+    for (var i = 0; i < groupCategories.length; i++) {
+        groupColors.push(echarts.color.modifyHSL('#5A94DF', hStep * i));
+    }
+
+    var plot6 = echarts.init(document.getElementById('plot6'), 'dark');
+    var option ={
+        tooltip: {
+            padding: 10,
+            backgroundColor: '#222',
+            borderColor: '#777',
+            borderWidth: 1,
+            // formatter: function (obj) {
+            //     var value = obj[0].value;
+            //     return '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
+            //         + schema[1].name + '：' + value[1] + '<br>'
+            //         + schema[2].name + '：' + value[2] + '<br>'
+            //         + schema[3].name + '：' + value[3] + '<br>'
+            //         + schema[4].name + '：' + value[4] + '<br>'
+            //         + schema[5].name + '：' + value[5] + '<br>'
+            //         + schema[6].name + '：' + value[6] + '<br>';
+            // }
+        },
+        visualMap: {
+            show: true,
+            type: 'piecewise',
+            categories: groupCategories,
+            dimension: indices.group,
+            inRange: {
+                color: groupColors //['#d94e5d','#eac736','#50a3ba']
+            },
+            outOfRange: {
+                color: ['#ccc'] //['#d94e5d','#eac736','#50a3ba']
+            },
+            top: 40,
+            left: 25,
+            textStyle: {
+                color: '#ddd'
+            },
+            realtime: false
+        },
+        parallelAxis: [
+            {dim: 2, name: schema[2].name, nameLocation: 'end', max: 1250},
+            {dim: 3, name: schema[3].name, nameLocation: 'end', max: 1250},
+            {dim: 4, name: schema[4].name, nameLocation: 'end', max: 1250},
+            {dim: 5, name: schema[5].name, nameLocation: 'end', max: 1250},
+            {dim: 6, name: schema[6].name, nameLocation: 'end', max: 1250},
+            {dim: 7, name: schema[7].name, nameLocation: 'end', max: 1250},
+            {dim: 8, name: schema[8].name, nameLocation: 'end', max: 1250},
+            {dim: 9, name: schema[9].name, nameLocation: 'end', max: 1250},
+            {dim: 10, name: schema[10].name, nameLocation: 'end', max: 1250},
+            {dim: 11, name: schema[11].name, nameLocation: 'end', max: 1250},
+            {dim: 12, name: schema[12].name, nameLocation: 'end', max: 1250},
+            {dim: 13, name: schema[13].name, nameLocation: 'end', max: 1250},
+            {dim: 14, name: schema[14].name, nameLocation: 'end', max: 1250},
+            {dim: 15, name: schema[15].name, nameLocation: 'end', max: 1250},
+            {dim: 16, name: schema[16].name, nameLocation: 'end', max: 1250},
+            {dim: 17, name: schema[17].name, nameLocation: 'end', max: 1250},
+            {dim: 18, name: schema[18].name, nameLocation: 'end', max: 1250},
+            {dim: 19, name: schema[19].name, nameLocation: 'end', max: 1250},
+            {dim: 20, name: schema[20].name, nameLocation: 'end', max: 1250},
+            {dim: 21, name: schema[21].name, nameLocation: 'end', max: 1250},
+            {dim: 22, name: schema[22].name, nameLocation: 'end', max: 1250},
+            {dim: 23, name: schema[23].name, nameLocation: 'end', max: 1250},
+            {dim: 24, name: schema[24].name, nameLocation: 'end', max: 1250},
+            {dim: 25, name: schema[25].name, nameLocation: 'end', max: 1250},
+        ],
+        parallel: {
+            left: 180,
+            top: 50,
+            bottom: 30,
+            right: 40,
+            layout: 'horizontal',
+            parallelAxisDefault: {
+                type: 'value',
+                nameLocation: 'end',
+                nameGap: 14,
+                nameTextStyle: {
+                    color: '#ddd',
+                    fontSize: 12
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#aaa'
+                    }
+                },
+                axisTick: {
+                    lineStyle: {
+                        color: '#777'
+                    }
+                },
+                splitLine: {
+                    show: false
+                },
+                axisLabel: {
+                    show: false,
+                },
+                realtime: false
+            }
+        },
+        animation: true,
+        series: [
+            {
+                name: '商圈人流时序分布',
+                type: 'parallel',
+                lineStyle: {
+                    normal: {
+                        width: 1,
+                        opacity: 0.3
+                    }
+                },
+                inactiveOpacity: 0,
+                activeOpacity: 0.3,
+                progressive: 500,
+                smooth: true,
+                data: dataset.json.human
+            }
+        ]
+    };
+    plot6.setOption(option);
 });
 </script>
 {% endblock %}
