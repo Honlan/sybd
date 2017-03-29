@@ -110,6 +110,33 @@ def index():
 				tmp[2].append([item[0], item[1]])
 		dataset['bus_speedmap'][key] = tmp
 
+	cursor.execute("select hour, lng, lat, speed from realtime_taxi")
+	realtime_taxi = cursor.fetchall()
+	tmp = {}
+	for item in realtime_taxi:
+		if not tmp.has_key(item['hour']):
+			tmp[item['hour']] = []
+		tmp[item['hour']].append([item['lng'], item['lat'], 1])
+	dataset['taxi_hotmap'] = tmp
+	tmp = {}
+	for item in realtime_taxi:
+		if not tmp.has_key(item['hour']):
+			tmp[item['hour']] = []
+		tmp[item['hour']].append([item['lng'], item['lat'], item['speed']])
+	dataset['taxi_speedmap'] = tmp
+	for key, value in dataset['taxi_speedmap'].items():
+		smax = np.max([item[2] for item in value])
+		smin = np.min([item[2] for item in value])
+		tmp = [[], [], []]
+		for item in value:
+			if (float(item[2]) - smin) / (smax - smin) < 0.33:
+				tmp[0].append([item[0], item[1]])
+			elif (float(item[2]) - smin) / (smax - smin) < 0.67:
+				tmp[1].append([item[0], item[1]])
+			else:
+				tmp[2].append([item[0], item[1]])
+		dataset['taxi_speedmap'][key] = tmp
+
 	closedb(db,cursor)
 
 	return render_template('index.html', dataset=json.dumps(dataset))

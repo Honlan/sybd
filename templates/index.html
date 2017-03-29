@@ -41,6 +41,19 @@
     margin-bottom: 30px;
 }
 
+#control2 {
+    position: absolute;
+    left: 30px;
+    top: 30px;
+}
+
+#count2 {
+    font-size: 80px;
+    text-align: center;
+    padding-top: 50px;
+    color: rgb(243, 230, 162);
+}
+
 #plot22 {
     width: 100%;
     height: 215px;
@@ -155,11 +168,19 @@
         <div class="plot-title">历史出租车数量</div>
         <div id="plot21"></div>
         <div class="plot-title">实时出租车数量</div>
-        <div id="plot22"></div>
+        <div id="plot22">
+            <p id="count2"></p>
+        </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
         <div class="plot-title">实时出租车分布热力图</div>
-        <div id="plot23">
+        <div style="position:relative;">
+            <div id="plot23">
+            </div>
+            <div id="control2" class="control">
+                <span class="fa fa-fw fa-play"></span>
+                <p></p>
+            </div>
         </div>
     </div>
 </div>
@@ -327,8 +348,89 @@ $(document).ready(function() {
         }]
     });
 
+
+    var tmp = [
+        [],
+        []
+    ];
+    for (var i = 0; i < 48; i++) {
+        if (i % 2 == 0) {
+            tmp[0].push(parseInt(parseInt(i) / 2) + ':00');
+        } else {
+            tmp[0].push(parseInt(parseInt(i) / 2) + ':30');
+        }
+        tmp[1].push(dataset.taxi_hotmap[String(i)].length);
+    }
+    var plot21 = echarts.init(document.getElementById('plot21'), 'dark');
+    plot21.setOption({
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            left: 20,
+            right: 25,
+            bottom: 20,
+            top: 30,
+            containLabel: true
+        },
+        xAxis: [{
+            type: 'category',
+            data: tmp[0],
+            axisTick: {
+                alignWithLabel: true
+            }
+        }],
+        yAxis: [{
+            type: 'value',
+            splitNumber: 4
+        }],
+        series: [{
+            name: '历史出租车数量',
+            data: tmp[1],
+            type: 'line',
+            symbol: 'none',
+            showSymbol: false,
+            smooth: true,
+        }]
+    });
+
     var plot23 = echarts.init(document.getElementById('plot23'), 'dark');
-    plot23.setOption(heatmapOption);
+    var tmp = heatmapOption;
+    tmp.series[0].data = dataset.taxi_hotmap[dataset.current];
+    plot23.setOption(tmp);
+    $('#count2').text(dataset.taxi_hotmap[dataset.current].length);
+
+    var interval2;
+    var current2 = parseInt(dataset.current);
+    $('#control2 span').click(function(event) {
+        $(this).toggleClass('fa-play').toggleClass('fa-pause');
+        if ($(this).hasClass('fa-pause')) {
+            interval2 = setInterval(function() {
+                current2 = (current2 + 1) % 48;
+                // if (current2 == 0) {
+                //     current2 = 19;
+                // }
+                if (current2 % 2 == 0) {
+                    $('#control2 p').text(parseInt(parseInt(current2) / 2) + ':00');
+                } else {
+                    $('#control2 p').text(parseInt(parseInt(current2) / 2) + ':30');
+                }
+                var tmp = heatmapOption;
+                tmp.series[0].data = dataset.taxi_hotmap[String(current2)];
+                plot23.setOption(tmp);
+                $('#count2').text(dataset.taxi_hotmap[String(current2)].length);
+                if (current2 == 0) {
+                    $('#control2 span').toggleClass('fa-play').toggleClass('fa-pause');
+                    clearInterval(interval2);
+                }
+            }, 1000);
+        } else {
+            clearInterval(interval2);
+        }
+    });
 
     var plot31 = echarts.init(document.getElementById('plot31'), 'dark');
     plot31.setOption({
@@ -390,6 +492,69 @@ $(document).ready(function() {
                 }
             },
             data: dataset.bus_speedmap[dataset.current][2]
+        }]
+    });
+
+    var plot32 = echarts.init(document.getElementById('plot32'), 'dark');
+    plot32.setOption({
+        backgroundColor: '#404a59',
+        legend: {
+            right: 20,
+            bottom: 20,
+            data: ['低速', '中速', '高速'],
+            textStyle: {
+                color: '#fff'
+            }
+        },
+        animation: false,
+        bmap: {
+            center: [123.43, 41.81],
+            zoom: 11,
+            roam: false,
+            mapStyle: mapstyle
+        },
+        series: [{
+            name: '低速',
+            type: 'scatter',
+            coordinateSystem: 'bmap',
+            symbolSize: 3,
+            large: true,
+            itemStyle: {
+                normal: {
+                    shadowBlur: 2,
+                    shadowColor: 'rgba(37, 140, 249, 0.8)',
+                    color: 'rgba(37, 140, 249, 0.8)'
+                }
+            },
+            data: dataset.taxi_speedmap[dataset.current][0]
+        }, {
+            name: '中速',
+            type: 'scatter',
+            coordinateSystem: 'bmap',
+            symbolSize: 3,
+            large: true,
+            itemStyle: {
+                normal: {
+                    shadowBlur: 2,
+                    shadowColor: 'rgba(14, 241, 242, 0.8)',
+                    color: 'rgba(14, 241, 242, 0.8)'
+                }
+            },
+            data: dataset.taxi_speedmap[dataset.current][1]
+        }, {
+            name: '高速',
+            type: 'scatter',
+            coordinateSystem: 'bmap',
+            symbolSize: 3,
+            large: true,
+            itemStyle: {
+                normal: {
+                    shadowBlur: 2,
+                    shadowColor: 'rgba(203, 254, 255, 0.8)',
+                    color: 'rgba(203, 254, 255, 0.8)'
+                }
+            },
+            data: dataset.taxi_speedmap[dataset.current][2]
         }]
     });
 
@@ -467,6 +632,67 @@ $(document).ready(function() {
                             }
                         },
                         data: dataset.bus_speedmap[String(current3)][2]
+                    }]
+                });
+                plot32.setOption({
+                    backgroundColor: '#404a59',
+                    legend: {
+                        right: 20,
+                        bottom: 20,
+                        data: ['低速', '中速', '高速'],
+                        textStyle: {
+                            color: '#fff'
+                        }
+                    },
+                    animation: false,
+                    bmap: {
+                        center: [123.43, 41.81],
+                        zoom: 11,
+                        roam: false,
+                        mapStyle: mapstyle
+                    },
+                    series: [{
+                        name: '低速',
+                        type: 'scatter',
+                        coordinateSystem: 'bmap',
+                        symbolSize: 3,
+                        large: true,
+                        itemStyle: {
+                            normal: {
+                                shadowBlur: 2,
+                                shadowColor: 'rgba(37, 140, 249, 0.8)',
+                                color: 'rgba(37, 140, 249, 0.8)'
+                            }
+                        },
+                        data: dataset.taxi_speedmap[String(current3)][0]
+                    }, {
+                        name: '中速',
+                        type: 'scatter',
+                        coordinateSystem: 'bmap',
+                        symbolSize: 3,
+                        large: true,
+                        itemStyle: {
+                            normal: {
+                                shadowBlur: 2,
+                                shadowColor: 'rgba(14, 241, 242, 0.8)',
+                                color: 'rgba(14, 241, 242, 0.8)'
+                            }
+                        },
+                        data: dataset.taxi_speedmap[String(current3)][1]
+                    }, {
+                        name: '高速',
+                        type: 'scatter',
+                        coordinateSystem: 'bmap',
+                        symbolSize: 3,
+                        large: true,
+                        itemStyle: {
+                            normal: {
+                                shadowBlur: 2,
+                                shadowColor: 'rgba(203, 254, 255, 0.8)',
+                                color: 'rgba(203, 254, 255, 0.8)'
+                            }
+                        },
+                        data: dataset.taxi_speedmap[String(current3)][2]
                     }]
                 });
                 if (current3 == 19) {

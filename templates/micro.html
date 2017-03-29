@@ -504,6 +504,7 @@ $(document).ready(function() {
 
     var plot11 = echarts.init(document.getElementById('plot11'), 'dark');
     plot11.setOption({
+        color: ['#dd6b66'],
         tooltip: {
             trigger: 'axis',
             axisPointer: {
@@ -550,6 +551,7 @@ $(document).ready(function() {
 
     var plot12 = echarts.init(document.getElementById('plot12'), 'dark');
     plot12.setOption({
+        color: ['#dd6b66'],
         tooltip: {
             trigger: 'axis',
             axisPointer: {
@@ -596,6 +598,7 @@ $(document).ready(function() {
 
     var plot21 = echarts.init(document.getElementById('plot21'), 'dark');
     plot21.setOption({
+        color: ['rgb(243, 230, 162)'],
         tooltip: {
             trigger: 'axis',
             axisPointer: {
@@ -639,6 +642,76 @@ $(document).ready(function() {
             }
         }]
     });
+
+    var plot22 = echarts.init(document.getElementById('plot22'), 'dark');
+    plot22.setOption({
+        color: ['rgb(243, 230, 162)'],
+        tooltip: {
+            trigger: 'axi',
+        },
+        grid: {
+            left: 20,
+            right: 25,
+            bottom: 20,
+            top: 30,
+            containLabel: true
+        },
+        xAxis: [{
+            type: 'value',
+            scale: true,
+            splitNumber: 4,
+            axisLabel: {
+                formatter: '{value} 小时'
+            },
+        }],
+        yAxis: [{
+            type: 'value',
+            scale: true,
+            splitNumber: 4,
+            axisLabel: {
+                formatter: '{value} 千米'
+            },
+        }],
+        series: [{
+            name: '单次出行出租车行驶时间和距离分布',
+            data: dataset.json.taxi_scatter,
+            type: 'scatter',
+            large: true,
+            symbolSize: 2
+        }]
+    });
+
+    var plot3 = echarts.init(document.getElementById('plot3'), 'dark');
+    plot3.setOption({
+        color: ['#5dbdd7'],
+        tooltip: {
+            formatter: function (param) {
+                // var route = data.routes[param.dataIndex];
+                // return data.airports[route[1]][1] + ' > ' + data.airports[route[2]][1];
+            }
+        },
+        bmap: {
+            center: [123.41, 41.8],
+            zoom: 12,
+            roam: 'move',
+            mapStyle: mapstyle
+        },
+        series: [{
+            type: 'lines',
+            coordinateSystem: 'bmap',
+            data: dataset.json.taxi_od,
+            large: true,
+            largeThreshold: 100,
+            lineStyle: {
+                normal: {
+                    opacity: 0.06,
+                    width: 0.3,
+                    curveness: 0.2
+                }
+            },
+            blendMode: 'lighter'
+        }]
+    })
 });
 </script>
 {% endblock %}
