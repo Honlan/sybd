@@ -108,7 +108,6 @@
     width: 100%;
     height: 400px;
     background-color: #30323c !important;
-    margin-bottom: 30px;
 }
 </style>
 {% endblock %} {% block body %}
@@ -152,7 +151,7 @@
 </div>
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div class="plot-title">活跃和载客出租车数量时序分布</div>
+        <div class="plot-title">运营和载客出租车数量时序分布</div>
         <div id="plot4">
         </div>
     </div>
@@ -320,8 +319,8 @@ $(document).ready(function() {
     var plot2_height = 400;
     var plot2_margins = [30, 20, 60, 50];
     d3.select('#plot2 svg g').selectAll('rect').data(dataset.json.bus_flow).enter().append('rect').attr({
-        width: 13,
-        height: 14,
+        width: 14,
+        height: 15,
         fill: function(d) {
             if (d[3] < 0.5) {
                 return colors1(2 *  d[3]);
@@ -412,8 +411,8 @@ $(document).ready(function() {
     var plot3_height = 400;
     var plot3_margins = [30, 20, 60, 50];
     d3.select('#plot3 svg g').selectAll('rect').data(dataset.json.metro_flow).enter().append('rect').attr({
-        width: 13,
-        height: 14,
+        width: 14,
+        height: 15,
         fill: function(d) {
             if (d[3] < 0.5) {
                 return colors1(2 *  d[3]);
@@ -507,7 +506,7 @@ $(document).ready(function() {
             trigger: 'axis'
         },
         legend: {
-            data: ['活跃出租车', '载客出租车'],
+            data: ['运营出租车', '载客出租车'],
             padding: [0, 0, 0, 0],
             top: 25
         },
@@ -548,7 +547,7 @@ $(document).ready(function() {
             }
         },
         series: [{
-            name: '活跃出租车',
+            name: '运营出租车',
             type: 'line',
             symbol: 'none',
             showSymbol: false,

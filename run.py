@@ -46,9 +46,11 @@ def index():
 		tmp[item['keyword']] = json.loads(item['json'])
 	dataset['json'] = tmp
 
-	closedb(db,cursor)
-
-	hour = str(((int(time.time()) % (3600 * 24)) / 3600 + 8) % 24)
+	hour = int(((int(time.time()) % (3600 * 24)) / 3600 + 8) % 24)
+	if hour < 10:
+		hour = '0' + str(hour)
+	else:
+		hour = str(hour)
 	dataset['json']['human']['hour'] = hour
 	timestamp = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']
 	for key in dataset['json']['human']['bar'].keys():
@@ -78,7 +80,38 @@ def index():
 				'children': children
 				})
 		dataset['json']['human']['tree'][t] = tmp
-	
+
+	current = str(((int(time.time()) % (3600 * 24)) / 1800 + 16) % 48)
+	dataset['current'] = current
+	cursor.execute("select hour, lng, lat, speed from realtime_bus")
+	realtime_bus = cursor.fetchall()
+	tmp = {}
+	for item in realtime_bus:
+		if not tmp.has_key(item['hour']):
+			tmp[item['hour']] = []
+		tmp[item['hour']].append([item['lng'], item['lat'], 1])
+	dataset['bus_hotmap'] = tmp
+	tmp = {}
+	for item in realtime_bus:
+		if not tmp.has_key(item['hour']):
+			tmp[item['hour']] = []
+		tmp[item['hour']].append([item['lng'], item['lat'], item['speed']])
+	dataset['bus_speedmap'] = tmp
+	for key, value in dataset['bus_speedmap'].items():
+		smax = np.max([item[2] for item in value])
+		smin = np.min([item[2] for item in value])
+		tmp = [[], [], []]
+		for item in value:
+			if (float(item[2]) - smin) / (smax - smin) < 0.33:
+				tmp[0].append([item[0], item[1]])
+			elif (float(item[2]) - smin) / (smax - smin) < 0.67:
+				tmp[1].append([item[0], item[1]])
+			else:
+				tmp[2].append([item[0], item[1]])
+		dataset['bus_speedmap'][key] = tmp
+
+	closedb(db,cursor)
+
 	return render_template('index.html', dataset=json.dumps(dataset))
 
 # 宏观
@@ -109,7 +142,21 @@ def macro():
 # 微观
 @app.route('/micro')
 def micro():
-	return render_template('micro.html')
+	dataset = {}
+
+	(db,cursor) = connectdb()
+
+	cursor.execute("select * from json_data where page=%s", ['micro'])
+	
+	json_data = cursor.fetchall()
+	tmp = {}
+	for item in json_data:
+		tmp[item['keyword']] = json.loads(item['json'])
+	dataset['json'] = tmp
+
+	closedb(db,cursor)
+	
+	return render_template('micro.html', dataset=json.dumps(dataset))
 
 # 介观
 @app.route('/meso')

@@ -36,22 +36,32 @@
 }
 
 #plot11 {
-    height: 350px;
+    height: 300px;
     background-color: #30323c !important;
     margin-bottom: 30px;
 }
 
 #plot12 {
-    height: 350px;
+    height: 300px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+#plot21 {
+    height: 300px;
     background-color: #30323c !important;
     margin-bottom: 30px;
 }
 
-#plot2 {
+#plot22 {
+    height: 300px;
+    background-color: #30323c !important;
+    margin-bottom: 30px;
+}
+
+#plot3 {
     width: 100%;
     height: 500px;
     background-color: #30323c !important;
-    margin-bottom: 30px;
 }
 </style>
 {% endblock %} {% block body %}
@@ -327,7 +337,7 @@
 </div>
 <div class="row">
     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-        <p class="plot-title">用户出入站点总数分布</p>
+        <p class="plot-title">用户乘坐公交次数分布</p>
         <div id="plot11"></div>
     </div>
     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -336,22 +346,27 @@
     </div>
 </div>
 <div class="row">
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <p class="plot-title">单次出行地铁驻留时间分布</p>
+        <div id="plot21"></div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <p class="plot-title">单次出行出租车行驶时间和距离分布</p>
+        <div id="plot22"></div>
+    </div>
+</div>
+<div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="plot-title">用户出行OD分布</div>
-        <div style="position:relative;">
-            <div id="plot2"></div>
-            <div id="control2">
-                <div id="btn1" class="active">地铁一号线</div>
-                <div id="btn2" class="active">地铁二号线</div>
-                <div id="btn3" class="active">道路摄像头</div>
-                <div id="btn4" class="active">公交线路</div>
-            </div>
-        </div>
+        <div id="plot3"></div>
     </div>
 </div>
 <script>
 $(document).ready(function() {
     $('#nav3').addClass('active');
+
+    var dataset = eval({{dataset | safe}});
+    console.log(dataset);
 
     new Vivus('motif1', {
         type: 'oneByOne',
@@ -486,6 +501,144 @@ $(document).ready(function() {
     };
     var motifStat = echarts.init(document.getElementById('motifStat'), 'dark');
     motifStat.setOption(option);
+
+    var plot11 = echarts.init(document.getElementById('plot11'), 'dark');
+    plot11.setOption({
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            left: 20,
+            right: 25,
+            bottom: 20,
+            top: 30,
+            containLabel: true
+        },
+        xAxis: [{
+            type: 'value',
+            // scale: true,
+            axisTick: {
+                alignWithLabel: true
+            },
+            min: 0,
+            max: 150
+        }],
+        yAxis: [{
+            type: 'value',
+            splitNumber: 4,
+            // scale: true
+        }],
+        series: [{
+            name: '用户乘坐公交次数分布',
+            data: dataset.json.bus_trip_num,
+            type: 'line',
+            symbol: 'none',
+            showSymbol: false,
+            smooth: true,
+            itemStyle: {
+                normal: {
+                    areaStyle: {
+                        type: 'default'
+                    }
+                }
+            }
+        }]
+    });
+
+    var plot12 = echarts.init(document.getElementById('plot12'), 'dark');
+    plot12.setOption({
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            left: 20,
+            right: 25,
+            bottom: 20,
+            top: 30,
+            containLabel: true
+        },
+        xAxis: [{
+            type: 'value',
+            // scale: true,
+            axisTick: {
+                alignWithLabel: true
+            },
+            min: 0,
+            max: 80
+        }],
+        yAxis: [{
+            type: 'value',
+            splitNumber: 4,
+            // scale: true
+        }],
+        series: [{
+            name: '用户乘坐地铁次数分布',
+            data: dataset.json.metro_trip_num,
+            type: 'line',
+            symbol: 'none',
+            showSymbol: false,
+            smooth: true,
+            itemStyle: {
+                normal: {
+                    areaStyle: {
+                        type: 'default'
+                    }
+                }
+            }
+        }]
+    });
+
+    var plot21 = echarts.init(document.getElementById('plot21'), 'dark');
+    plot21.setOption({
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            left: 20,
+            right: 25,
+            bottom: 20,
+            top: 30,
+            containLabel: true
+        },
+        xAxis: [{
+            type: 'value',
+            // scale: true,
+            axisTick: {
+                alignWithLabel: true
+            },
+            min: 0,
+            max: 60
+        }],
+        yAxis: [{
+            type: 'value',
+            splitNumber: 4,
+            // scale: true
+        }],
+        series: [{
+            name: '单次出行地铁驻留时间分布',
+            data: dataset.json.metro_dwell,
+            type: 'line',
+            symbol: 'none',
+            showSymbol: false,
+            smooth: true,
+            itemStyle: {
+                normal: {
+                    areaStyle: {
+                        type: 'default'
+                    }
+                }
+            }
+        }]
+    });
 });
 </script>
 {% endblock %}
